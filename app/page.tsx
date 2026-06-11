@@ -32,10 +32,11 @@ function getSafeRedirect(url: string | null): string {
     const parsed = new URL(url);
     const hostname = parsed.hostname;
 
-    // Check if hostname is allowed or is a subdomain of guptadhairya.com
+    // Check if hostname is allowed or is a subdomain of guptadhairya.com or vercel.app
     const isAllowed =
       ALLOWED_DOMAINS.includes(hostname) ||
       hostname.endsWith(".guptadhairya.com") ||
+      hostname.endsWith(".vercel.app") ||
       hostname === "localhost" ||
       // Cover typical local development hosts
       /^127\.\d+\.\d+\.\d+$/.test(hostname) ||
