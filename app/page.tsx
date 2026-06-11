@@ -183,21 +183,7 @@ function AuthContent() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="glass-card rounded-2xl p-8 text-center flex flex-col items-center transition-all duration-500"
       >
-        {/* Header */}
-        <div className="mb-8">
-          <motion.h1
-            style={{ fontFamily: "var(--font-serif)" }}
-            className="text-3xl font-semibold tracking-widest text-[#f3ddb6] mb-2 uppercase"
-            initial={{ letterSpacing: "0.1em" }}
-            animate={{ letterSpacing: "0.2em" }}
-            transition={{ duration: 1 }}
-          >
-            Dhairya Gupta
-          </motion.h1>
-          <p className="text-xs text-gray-500 tracking-wider uppercase font-light">
-            Ecosystem Authentication
-          </p>
-        </div>
+
 
         {/* Warning banner for missing configuration */}
         {isConfigError && (
@@ -365,7 +351,6 @@ function AuthContent() {
         {/* Security Footer Badge */}
         <div className="mt-8 pt-6 border-t border-zinc-900 w-full flex items-center justify-center gap-2 text-[10px] text-gray-600 uppercase tracking-widest">
           <Lock className="w-3.5 h-3.5 text-gray-700" />
-          <span>Secure SSL Encryption</span>
         </div>
       </motion.div>
     </div>
