@@ -63,6 +63,7 @@ function AuthContent() {
   const searchParams = useSearchParams();
   const rawRedirect = searchParams.get("redirect");
   const redirectUrl = getSafeRedirect(rawRedirect);
+  const action = searchParams.get("action");
 
   const [checkingSession, setCheckingSession] = useState(true);
   const [sessionUser, setSessionUser] = useState<UserState | null>(null);
@@ -99,13 +100,20 @@ function AuthContent() {
 
   // Auto-redirect if already authenticated and redirect URL is provided
   useEffect(() => {
-    if (sessionUser && redirectUrl) {
+    if (sessionUser && redirectUrl && action !== "logout") {
       const timer = setTimeout(() => {
         window.location.href = redirectUrl;
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [sessionUser, redirectUrl]);
+  }, [sessionUser, redirectUrl, action]);
+
+  // Handle auto-logout on mount if action=logout is specified
+  useEffect(() => {
+    if (action === "logout") {
+      handleSignOut();
+    }
+  }, [action]);
 
   const handleGoogleSignIn = async () => {
     setError(null);
@@ -172,11 +180,20 @@ function AuthContent() {
       });
 
       setSessionUser(null);
+
+      // If this is a global logout redirect from another app, bounce back
+      if (action === "logout" && redirectUrl) {
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, 1000);
+      }
     } catch (err: any) {
       console.error("Sign-out failure:", err);
       setError("Failed to clear session securely.");
     } finally {
-      setCheckingSession(false);
+      if (action !== "logout" || !redirectUrl) {
+        setCheckingSession(false);
+      }
     }
   };
 
