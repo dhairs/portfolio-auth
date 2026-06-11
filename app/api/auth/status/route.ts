@@ -1,16 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getAdminAuth } from "@/lib/firebase-admin";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("__session")?.value;
+
+  if (!sessionCookie) {
+    return NextResponse.json({ isAuthenticated: false, user: null });
+  }
+
   try {
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get("__session")?.value;
-
-    if (!sessionCookie) {
-      return NextResponse.json({ isAuthenticated: false, user: null });
-    }
-
     // Verify session cookie, check if revoked
     const adminAuth = getAdminAuth();
     const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
@@ -29,7 +31,6 @@ export async function GET() {
     
     // Clean up invalid cookie if verification failed
     try {
-      const cookieStore = await cookies();
       const cookieOptions: any = {
         name: "__session",
         value: "",

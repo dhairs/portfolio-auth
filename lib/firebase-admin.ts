@@ -10,11 +10,15 @@ function initializeAdmin() {
 
     if (projectId && clientEmail && privateKey) {
       try {
+        const cleanPrivateKey = privateKey
+          .replace(/\\n/g, "\n")
+          .replace(/^['"]|['"]$/g, "");
+
         initializeApp({
           credential: cert({
             projectId,
             clientEmail,
-            privateKey: privateKey.replace(/\\n/g, "\n"),
+            privateKey: cleanPrivateKey,
           }),
         });
         console.log("Firebase Admin SDK initialized successfully in portfolio-auth.");

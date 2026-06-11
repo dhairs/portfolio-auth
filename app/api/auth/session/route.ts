@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { getAdminAuth } from "@/lib/firebase-admin";
 
 export async function POST(request: NextRequest) {
+  const cookieStore = await cookies();
   try {
     const { idToken } = await request.json();
 
@@ -18,8 +19,6 @@ export async function POST(request: NextRequest) {
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
       expiresIn,
     });
-
-    const cookieStore = await cookies();
 
     const cookieOptions: any = {
       name: "__session",
@@ -49,8 +48,8 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE() {
+  const cookieStore = await cookies();
   try {
-    const cookieStore = await cookies();
     
     const cookieOptions: any = {
       name: "__session",
