@@ -97,6 +97,16 @@ function AuthContent() {
     checkStatus();
   }, []);
 
+  // Auto-redirect if already authenticated and redirect URL is provided
+  useEffect(() => {
+    if (sessionUser && redirectUrl) {
+      const timer = setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [sessionUser, redirectUrl]);
+
   const handleGoogleSignIn = async () => {
     setError(null);
     setAuthenticating(true);
